@@ -33,11 +33,10 @@ namespace Azure
                 .AddSingleton(_commands)
                 .BuildServiceProvider();
 
-            if (File.Exists("../../config.json")) {
-                BotConfig = JsonConvert.DeserializeObject<Config>(File.ReadAllText("../../config.json"));
-            }
-            else {
-                Console.WriteLine("Config File not found!\nClosing process.");
+            try {
+                Config BotConfig = Config.GetConfig();
+            } catch(FileNotFoundException e) {
+                Console.WriteLine(e + "\nConfig File not found!\nClosing process.");
                 Thread.Sleep(3000);
                 Environment.Exit(0);
             }

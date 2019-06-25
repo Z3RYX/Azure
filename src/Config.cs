@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,9 +19,9 @@ namespace Azure
         [JsonProperty("AUTHOR_ID")]
         public readonly ulong AuthorId;
         [JsonProperty("INVITE_BASE")]
-        private readonly string InviteBase;
+        public readonly string InviteBase;
         [JsonProperty("PERMISSIONS")]
-        private readonly int Permissions;
+        public readonly ulong Permissions;
         [JsonProperty("SOURCE_CODE")]
         public readonly string SourceLink;
         [JsonProperty("TOKEN")]
@@ -29,5 +30,12 @@ namespace Azure
         public readonly string Prefix;
 
         public string InviteLink { get { return InviteBase + AppId + "&permissions=" + Permissions + "&scope=bot"; } }
+
+        public static Config GetConfig()
+        {
+            string path = "../../settings.json";
+            if (!File.Exists(path)) throw new FileNotFoundException();
+            return JsonConvert.DeserializeObject<Config>(File.ReadAllText(path));
+        }
     }
 }

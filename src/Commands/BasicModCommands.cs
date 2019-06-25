@@ -1,0 +1,38 @@
+﻿using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Azure.Commands
+{
+    public class BasicModCommands : ModuleBase<SocketCommandContext>
+    {
+        Config config = Config.GetConfig();
+
+        [Command("kick")]
+        public async Task KickAsync(SocketGuildUser User, string Reason = "")
+        {
+            if (!CommandUtils.HasPermission(Context.Guild.GetUser(Context.User.Id), GuildPermission.KickMembers)) {
+                await ReplyAsync("You are missing the permissions to kick other users.");
+                return;
+            }
+
+            if (!CommandUtils.HasPermission(Context.Guild.CurrentUser, GuildPermission.KickMembers)) {
+                await ReplyAsync("I am missing the permissions to kick other users.");
+                return;
+            }
+
+            try {
+                await User.KickAsync(Reason);
+                await ReplyAsync($"{User.ToString()} has been kicked from the server.\n**Reason**: {Reason}");
+            } catch(Exception e) {
+                await ReplyAsync("Something has gone horribly wrong and the dev has been notified.");
+                await Context.Client.GetUser(config.AuthorId).SendMessageAsync($"ERROR on message from {Context.User.ToString()}:\n{Context.Message.Content}\nThrew error: {e.Message}")
+            }
+        }
+    }
+}
