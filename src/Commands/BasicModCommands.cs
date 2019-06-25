@@ -31,7 +31,30 @@ namespace Azure.Commands
                 await ReplyAsync($"{User.ToString()} has been kicked from the server.\n**Reason**: {Reason}");
             } catch(Exception e) {
                 await ReplyAsync("Something has gone horribly wrong and the dev has been notified.");
-                await Context.Client.GetUser(config.AuthorId).SendMessageAsync($"ERROR on message from {Context.User.ToString()}:\n{Context.Message.Content}\nThrew error: {e.Message}")
+                await Context.Client.GetUser(config.AuthorId).SendMessageAsync($"ERROR on message from {Context.User.ToString()}:\n{Context.Message.Content}\nThrew error: {e.Message}");
+            }
+        }
+
+        [Command("ban")]
+        public async Task BanAsync(SocketGuildUser User, string Reason = "")
+        {
+            if (!CommandUtils.HasPermission(Context.Guild.GetUser(Context.User.Id), GuildPermission.BanMembers)) {
+                await ReplyAsync("You are missing the permissions to ban other users.");
+                return;
+            }
+
+            if (!CommandUtils.HasPermission(Context.Guild.CurrentUser, GuildPermission.BanMembers)) {
+                await ReplyAsync("I am missing the permissions to ban other users.");
+                return;
+            }
+
+            try {
+                await User.BanAsync(reason: Reason);
+                await ReplyAsync($"{User.ToString()} has been banned from the server.\n**Reason**: {Reason}");
+            }
+            catch (Exception e) {
+                await ReplyAsync("Something has gone horribly wrong and the dev has been notified.");
+                await Context.Client.GetUser(config.AuthorId).SendMessageAsync($"ERROR on message from {Context.User.ToString()}:\n{Context.Message.Content}\nThrew error: {e.Message}");
             }
         }
     }
