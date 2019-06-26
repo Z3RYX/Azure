@@ -11,6 +11,10 @@ namespace Azure.Models
     {
         public readonly ulong ID;
         public string Prefix;
+        public ulong? ModlogChannel;
+        public ulong? TicketChannel;
+        public bool AllowModlog;
+        public bool AllowTickets;
         public int ModlogCount;
         public List<int> Tickets;
         public List<GuildUser> GuildUsers;
@@ -23,11 +27,31 @@ namespace Azure.Models
             ID = guild.Id;
             Prefix = "//";
             ModlogCount = 0;
+
+            if (guild.TextChannels.Where(x => x.Name == "modlog").Select(x => x.Id).Count() == 0) {
+                ModlogChannel = null;
+                AllowModlog = false;
+            } else {
+                ModlogChannel = guild.TextChannels.Where(x => x.Name == "modlog").Select(x => x.Id).First();
+                AllowModlog = true;
+            }
+
+            if (guild.TextChannels.Where(x => x.Name == "tickets" || x.Name == "support-tickets").Select(x => x.Id).Count() == 0) {
+                TicketChannel = null;
+                AllowTickets = false;
+            }
+            else {
+                TicketChannel = guild.TextChannels.Where(x => x.Name == "tickets" || x.Name == "support-tickets").Select(x => x.Id).First();
+                AllowTickets = true;
+            }
+
             Tickets = new List<int>();
+
             foreach (var user in guild.Users) {
                 GuildUser guildUser = new GuildUser(user);
                 GuildUsers.Add(guildUser);
             }
+
             FilterLevel = 0;
             WarnsForAction = 0;
             BanForWarns = false;
@@ -59,7 +83,7 @@ namespace Azure.Models
             return this;
         }
 
-        public Guild AddGuildUser(SocketUser user)
+        public Guild AddGuildUser(SocketGuildUser user)
         {
             GuildUsers.Add(new GuildUser(user));
             return this;
@@ -88,6 +112,46 @@ namespace Azure.Models
         public Guild SetActionForWarns(bool action)
         {
             BanForWarns = action;
+            return this;
+        }
+
+        public Guild SetModlogChannel(SocketTextChannel channel)
+        {
+            ModlogChannel = channel.Id;
+            AllowModlog = true;
+            return this;
+        }
+
+        public Guild SetTicketChannel(SocketTextChannel channel)
+        {
+            TicketChannel = channel.Id;
+            AllowTickets = true;
+            return this;
+        }
+
+        public Guild ResetModlogChannel()
+        {
+            ModlogChannel = null;
+            AllowModlog = false;
+            return this;
+        }
+
+        public Guild ResetTicketChannel()
+        {
+            TicketChannel = null;
+            AllowTickets = false;
+            return this;
+        }
+
+        public Guild SetModlogAllowed(bool allowed)
+        {
+            AllowModlog = (ModlogChannel.Equals(null) ? false : allowed);
+            return this;
+        }
+
+        public Guild SetTicketAllowed(bool allowed)
+        {
+            AllowTickets = (TicketChannel.Equals(null) ? false : allowed);
             return this;
         }
     }
