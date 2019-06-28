@@ -38,7 +38,7 @@ namespace Azure.Commands
         }
 
         [Command("ban")]
-        public async Task BanAsync(SocketGuildUser User, string Reason = "")
+        public async Task BanAsync(SocketGuildUser User, [Remainder] string Reason = "")
         {
             if (!CommandUtils.HasPermission(Context.Guild.GetUser(Context.User.Id), GuildPermission.BanMembers)) {
                 await ReplyAsync("You are missing the permissions to ban other users.");

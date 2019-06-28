@@ -47,12 +47,10 @@ namespace Azure.Models
             }
 
             if (guild.Roles.Where(x => x.Name.ToLower() == "muted").Select(x => x.Id).Count() == 0) {
-                ModlogChannel = null;
-                AllowModlog = false;
+                MuteRole = null;
             }
             else {
-                ModlogChannel = guild.TextChannels.Where(x => x.Name.ToLower() == "muted").Select(x => x.Id).First();
-                AllowModlog = true;
+                MuteRole = guild.TextChannels.Where(x => x.Name.ToLower() == "muted").Select(x => x.Id).First();
             }
 
             Tickets = new List<int>();
