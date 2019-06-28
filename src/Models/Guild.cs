@@ -13,6 +13,7 @@ namespace Azure.Models
         public string Prefix;
         public ulong? ModlogChannel;
         public ulong? TicketChannel;
+        public ulong? MuteRole;
         public bool AllowModlog;
         public bool AllowTickets;
         public int ModlogCount;
@@ -43,6 +44,15 @@ namespace Azure.Models
             else {
                 TicketChannel = guild.TextChannels.Where(x => x.Name == "tickets" || x.Name == "support-tickets").Select(x => x.Id).First();
                 AllowTickets = true;
+            }
+
+            if (guild.Roles.Where(x => x.Name.ToLower() == "muted").Select(x => x.Id).Count() == 0) {
+                ModlogChannel = null;
+                AllowModlog = false;
+            }
+            else {
+                ModlogChannel = guild.TextChannels.Where(x => x.Name.ToLower() == "muted").Select(x => x.Id).First();
+                AllowModlog = true;
             }
 
             Tickets = new List<int>();
@@ -152,6 +162,18 @@ namespace Azure.Models
         public Guild SetTicketAllowed(bool allowed)
         {
             AllowTickets = (TicketChannel.Equals(null) ? false : allowed);
+            return this;
+        }
+
+        public Guild SetMuteRole(SocketRole role)
+        {
+            MuteRole = role.Id;
+            return this;
+        }
+
+        public Guild ResetMuteRole()
+        {
+            MuteRole = null;
             return this;
         }
     }

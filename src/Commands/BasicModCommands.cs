@@ -14,7 +14,7 @@ namespace Azure.Commands
         Config config = Config.GetConfig();
 
         [Command("kick")]
-        public async Task KickAsync(SocketGuildUser User, string Reason = "")
+        public async Task KickAsync(SocketGuildUser User, [Remainder] string Reason = null)
         {
             if (!CommandUtils.HasPermission(Context.Guild.GetUser(Context.User.Id), GuildPermission.KickMembers)) {
                 await ReplyAsync("You are missing the permissions to kick other users.");
@@ -28,7 +28,9 @@ namespace Azure.Commands
 
             try {
                 await User.KickAsync(Reason);
-                await ReplyAsync($"{User.ToString()} has been kicked from the server.\n**Reason**: {Reason}");
+                await ReplyAsync($"{User.ToString()} has been kicked from the server.\n**Reason**: {Reason ?? "None"}");
+                Embed modlog = await CommandUtils.CreateModlog(Context.Guild, Context.User, User as SocketUser, CommandUtils.ModlogType.Kick, Reason);
+                await Context.Guild.GetTextChannel(FileSystem.GetGuild(Context.Guild).ModlogChannel.Value).SendMessageAsync("", embed: modlog);
             } catch(Exception e) {
                 await ReplyAsync("Something has gone horribly wrong and the dev has been notified.");
                 await Context.Client.GetUser(config.AuthorId).SendMessageAsync($"ERROR on message from {Context.User.ToString()}:\n{Context.Message.Content}\nThrew error: {e.Message}");
@@ -51,6 +53,8 @@ namespace Azure.Commands
             try {
                 await User.BanAsync(reason: Reason);
                 await ReplyAsync($"{User.ToString()} has been banned from the server.\n**Reason**: {Reason}");
+                Embed modlog = await CommandUtils.CreateModlog(Context.Guild, Context.User, User as SocketUser, CommandUtils.ModlogType.Ban, Reason);
+                await Context.Guild.GetTextChannel(FileSystem.GetGuild(Context.Guild).ModlogChannel.Value).SendMessageAsync("", embed: modlog);
             }
             catch (Exception e) {
                 await ReplyAsync("Something has gone horribly wrong and the dev has been notified.");
