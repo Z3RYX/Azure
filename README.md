@@ -25,7 +25,7 @@ You can join the support server here:
 Here's a basic list of things I want to add to Azure
 
 - [ ] Kick, Ban, Mute commands
-- [ ] Modlog functionality
+- [x] Modlog functionality
 - [ ] Support-Ticket System for Servers
 - [ ] Remove NSFW Imagery with Google Vision API
 - [ ] Back-Up entire Servers
