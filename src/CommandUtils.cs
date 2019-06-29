@@ -51,13 +51,16 @@ namespace Azure
             Kick,
             Ban,
             Muted,
-            Warn
+            Unmuted,
+            Warn,
+            Pardon
         }
 
         public static async Task<Embed> CreateModlog(SocketGuild guild, SocketUser caller, SocketUser user, ModlogType type, string Reason = null)
         {
             var guildObj = FileSystem.GetGuild(guild);
-            if (!guildObj.AllowModlog) throw new Exception("Modlog isn't enabled on this server\nUse //setmodlogchannel to enable modlog");
+            var guilduser = guildObj.GuildUsers.Where(x => x.ID == user.Id).First();
+            if (!guildObj.AllowModlog) throw new OperationCanceledException("Modlog isn't enabled on this server\nUse //setmodlogchannel to enable modlog");
             var embed = new EmbedBuilder();
             Embed Result = null;
             switch (type) {
@@ -86,13 +89,30 @@ namespace Azure
                         .Build();
                     break;
                 case ModlogType.Warn:
-                    var guilduser = guildObj.GuildUsers.Where(x => x.ID == user.Id).First();
                     guilduser = guilduser.IncreaseWarnCount();
                     guildObj.SetGuildUser(guilduser);
                     Result = embed
                         .WithColor(Color.Gold)
                         .WithCurrentTimestamp()
                         .WithTitle($"[#{guildObj.ModlogCount + 1}] {caller.ToString()} warned {user.ToString()}")
+                        .WithDescription($"{user.Username} has a total of {guilduser.WarnCount} now\n**Reason:** {Reason ?? "No reason given"}")
+                        .Build();
+                    break;
+                case ModlogType.Unmuted:
+                    Result = embed
+                        .WithColor(Color.Purple)
+                        .WithCurrentTimestamp()
+                        .WithTitle($"[#{guildObj.ModlogCount + 1}] {caller.ToString()} unmuted {user.ToString()}")
+                        .WithDescription($"**Reason:** {Reason ?? "No reason given"}")
+                        .Build();
+                    break;
+                case ModlogType.Pardon:
+                    guilduser = guilduser.DecreaseWarnCount();
+                    guildObj.SetGuildUser(guilduser);
+                    Result = embed
+                        .WithColor(Color.Green)
+                        .WithCurrentTimestamp()
+                        .WithTitle($"[#{guildObj.ModlogCount + 1}] {caller.ToString()} pardoned {user.ToString()} and a warn has been removed")
                         .WithDescription($"{user.Username} has a total of {guilduser.WarnCount} now\n**Reason:** {Reason ?? "No reason given"}")
                         .Build();
                     break;

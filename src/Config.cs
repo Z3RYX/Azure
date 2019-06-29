@@ -33,7 +33,7 @@ namespace Azure
 
         public static Config GetConfig()
         {
-            string path = "../../settings.json";
+            string path = "settings.json";
             if (!File.Exists(path)) throw new FileNotFoundException();
             return JsonConvert.DeserializeObject<Config>(File.ReadAllText(path));
         }

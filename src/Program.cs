@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using Azure.Models;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,8 @@ namespace Azure
             }
 
             _client.Log += Log;
+            _client.UserJoined += Join;
+            _client.JoinedGuild += JoinedGuild;
 
             await RegisterCommandsAsync();
 
@@ -54,6 +57,21 @@ namespace Azure
         private Task Log(LogMessage msg)
         {
             Console.WriteLine(msg.ToString());
+            return Task.CompletedTask;
+        }
+
+        private Task Join(SocketGuildUser user)
+        {
+            var Guild = FileSystem.GetGuild(user.Guild).AddGuildUser(user);
+            var User = FileSystem.GetUser(user);
+            FileSystem.SetUser(User);
+            FileSystem.SetGuild(Guild);
+            return Task.CompletedTask;
+        }
+
+        private Task JoinedGuild(SocketGuild guild)
+        {
+            FileSystem.SetGuild(new Guild(guild));
             return Task.CompletedTask;
         }
 

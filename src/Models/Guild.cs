@@ -19,7 +19,6 @@ namespace Azure.Models
         public int ModlogCount;
         public List<int> Tickets;
         public List<GuildUser> GuildUsers;
-        public int FilterLevel; // Filter strength of Vision API. 0 = none, 1 = allow lewd stuff, 2 = allow mildy lewd stuff, 3 = keep it clean
         public int WarnsForAction; // How many warns until the bot takes action; Default is 0 (doesn't take any action)
         public bool BanForWarns; // Defaults to false; False kicks the user, True bans the user
 
@@ -55,12 +54,9 @@ namespace Azure.Models
 
             Tickets = new List<int>();
 
-            foreach (var user in guild.Users) {
-                GuildUser guildUser = new GuildUser(user);
-                GuildUsers.Add(guildUser);
-            }
+            guild.DownloadUsersAsync();
+            GuildUsers = guild.Users.Select(x => new GuildUser(x)).ToList();
 
-            FilterLevel = 0;
             WarnsForAction = 0;
             BanForWarns = false;
         }
@@ -102,12 +98,6 @@ namespace Azure.Models
             if (GuildUsers.Where(x => x.ID == user.ID).Count() != 1)
                 throw new Exception("User not found or multiple users with the same ID");
             GuildUsers.Remove(user);
-            return this;
-        }
-
-        public Guild SetFilterLevel(int level)
-        {
-            FilterLevel = level;
             return this;
         }
 

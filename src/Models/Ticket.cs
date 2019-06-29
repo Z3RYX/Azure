@@ -13,6 +13,7 @@ namespace Azure.Models
         public readonly int ID;
         public readonly DateTime CreationDate;
         public DateTime? CloseDate;
+        public ulong? MessageID;
         public bool IsOpen;
         public readonly ulong GuildID;
         public readonly ulong UserID;
@@ -25,6 +26,7 @@ namespace Azure.Models
             int TicketCount = Directory.GetFiles(FileSystem.TICKETS).Count();
             ID = TicketCount + 1;
             CreationDate = DateTime.UtcNow;
+            MessageID = null;
             CloseDate = null;
             IsOpen = true;
             GuildID = user.Guild.Id;
@@ -47,6 +49,12 @@ namespace Azure.Models
             CloseDate = DateTime.UtcNow;
             ClosedBy = user.Id;
             ClosingReason = Reason;
+            return this;
+        }
+
+        public Ticket SetMessageID(ulong msgID)
+        {
+            MessageID = msgID;
             return this;
         }
     }
