@@ -1,8 +1,11 @@
 # Azure for Discord Hack-Week 2019
+![NOTICE](https://img.shields.io/badge/IMPORTANT0%20NOTICE-SERIOUS&20BUG-critical.svg)  
+**I did not test the bot before doing the final commit. On line 38 in Program.cs there is a little bug that stops the bot from working. To fix this issue, just remove the `Config` infront of BotConfig. The bot that I am running and that can be invited from this repo will have that fixed. So technically, the bot did not work at the time of the deadline, so unless the review team has mercy, this bot will be disqualified.**
+
 Azure is a moderation bot written in C# using Discord.Net  
 This is a project for Discord Hack-Week 2019
 
-![Completion Status: WiP](https://img.shields.io/badge/Completion%20Status-Work%20in%20Progress-critical.svg)
+![Completion Status: Working](https://img.shields.io/badge/Completion%20Status-Kind%20of%20Working-yellow.svg)
 
 ---
 
@@ -24,10 +27,10 @@ You can join the support server here:
 
 Here's a basic list of things I want to add to Azure
 
-- [ ] Kick, Ban, Mute commands
+- [x] Kick, Ban, Mute commands
 - [x] Modlog functionality
-- [ ] Support-Ticket System for Servers
-- [ ] Remove NSFW Imagery with Google Vision API
+- [x] Support-Ticket System for Servers
+- [ ] ~~Remove NSFW Imagery with Google Vision API~~
 - [ ] Back-Up entire Servers
 
 - [ ] Add Documentation
