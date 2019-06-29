@@ -1,11 +1,11 @@
 # Azure for Discord Hack-Week 2019
-![NOTICE](https://img.shields.io/badge/IMPORTANT0%20NOTICE-SERIOUS&20BUG-critical.svg)  
-**I did not test the bot before doing the final commit. On line 38 in Program.cs there is a little bug that stops the bot from working. To fix this issue, just remove the `Config` infront of BotConfig. The bot that I am running and that can be invited from this repo will have that fixed. So technically, the bot did not work at the time of the deadline, so unless the review team has mercy, this bot will be disqualified.**
+![NOTICE](https://img.shields.io/badge/IMPORTANT0%20NOTICE-SERIOUS%20BUGS-critical.svg)  
+**This repo contains a lot of untested features and therefore a handful of bot breaking bugs! I DECLARE THIS SUBMISSION AS DISQUALIFIED AS IT WILL NOT WORK AT ALL WHEN COMPILED AND RUN! I am currently working on those bugs and once the results for Hack-Week are in, I will commit the fixed version. The official bot hosted by me will have these fixes way earlier.**
 
 Azure is a moderation bot written in C# using Discord.Net  
 This is a project for Discord Hack-Week 2019
 
-![Completion Status: Working](https://img.shields.io/badge/Completion%20Status-Kind%20of%20Working-yellow.svg)
+![Completion Status: BUGS EVERYWHERE](https://img.shields.io/badge/Completion%20Status-DON'T%20COMPILE-critical.svg)
 
 ---
 
